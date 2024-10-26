@@ -14,7 +14,7 @@ cd info @kld
 && 
 
 ```
-python -m SimpleHTTPServer --port  3000
+port = 3000
 ```
 
 visit http://localhost:3000 in your browser.
