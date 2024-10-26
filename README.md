@@ -34,5 +34,5 @@ npm run server-node
 ```
 visit http://localhost:3000 in your browser.
 for login admin/user ,edit database table, tbladmin,tbluser with md5 encrypted password 
-https://md5decrypted.net
+https://md5decrypt.net
 
