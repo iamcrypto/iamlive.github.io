@@ -11,7 +11,8 @@ edit connectDB id password in src/config.js
 ## 
 ```
 edit .env file
-set databasehost
+set database
+host
 e.g database user, name, password
 ```
 
@@ -29,13 +30,17 @@ npm start
 you can also include given node mudules to save time
 
 visit http://localhost:3000 in your browser.
+Live app preview  https://binod.live
+login id password :9876543210 & 123456 respectively
 
 ## Another application required here is Xampp server installed and database server is set to - Server version: 10.4.12-MariaDB-log
-change user account credentials in phpmyadmin
+change user account credentials in phpmyadmin
+
 ```
 username 
 
-password
+password
+
 ```
 &&
 
