@@ -29,7 +29,7 @@ visit http://localhost:3000 in your browser.
 ## Another application required here is Xampp server installed and database server is set to - Server version: 10.4.12-MariaDB-log
 change user account credentials in phpmyadmin
 ```
-npm in it
+npm init
 
 npm start
 ```
