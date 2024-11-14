@@ -1,15 +1,12 @@
-import 'dotenv/config'
 const mysql = require('mysql2/promise');
 
 const connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    port: process.env.DATABASE_PORT,
-    waitForConnections: true,
-    conectionLimit: 3,
-    queueLimit: 0
+    host: 'sql12.freesqldatabase.com',
+    user: 'sql12744668',
+    password: 'uRMKtNH55m',
+    database: 'sql12744668',
+    port: '3306'
+
 });
 
 export default connection;

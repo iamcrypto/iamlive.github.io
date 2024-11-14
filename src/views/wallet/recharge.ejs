@@ -150,16 +150,16 @@
                             </div>
                         </div>
 
-                  <!--      <div data-v-67caa467="" class="item" type="wow_pay">
-                            <img data-v-67caa467="" width="20px" height="20px" src="/images/recharge_TRANSFER_red.webp"
+                       <div data-v-67caa467="" class="item" type="wow_pay">
+                            <img data-v-67caa467="" width="20px" height="20px" src="/images/recharge_TRANSFER4-.png"
                                 class="img">
-                            <div data-v-67caa467="" class="name">GO Pay</div>
+                            <div data-v-67caa467="" class="name">PI Pay</div>
 
                             <div data-v-67caa467="" class="icon">
                                 <i data-v-67caa467="" class="van-icon van-icon-success"
                                     style="color: rgb(255, 255, 255); font-size: 14px;"> </i>
                             </div>
-                        </div>  -->
+                        </div> 
 
                         <div data-v-67caa467="" class="item" type="usdt_manual">
                             <img data-v-67caa467="" width="20px" height="20px" src="/images/recharge_TRANSFER3.png"
@@ -584,26 +584,9 @@
         }
 
         const handleWowPayPaymentRequest = async (moneyAmount) => {
-            try {
-                const response = await axios.post(`/wallet/paynow/wowpay?money=${moneyAmount}`)
-
-                const data = response?.data
-
-                if (data === undefined || data === null) {
-                    alertMessage("Something went wrong!")
-                    return
-                }
-
-
-                if (data?.status === false) {
-                    alertMessage(data?.message)
-                    return
-                }
-
-                window.location.href = data?.payment_url
-            } catch (error) {
-                console.log(error)
-            }
+        
+                window.location.href = `/wallet/paynow/pipay?am=${moneyAmount} `
+    
         }
 
         const handleManualUSDTPaymentRequest = async (moneyAmount) => {
