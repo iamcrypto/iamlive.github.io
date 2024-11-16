@@ -1,8 +1,8 @@
 {
-  "rewrites": [{
-    { "source": "/src", "destination": "/server.js"     }
- 
-    
-
-  }]
+  "rewrites": [
+    {
+      "source": ".",
+      "destination": "/*"
+    }
+  ]
 }
