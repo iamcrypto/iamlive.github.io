@@ -1,6 +1,6 @@
 {
   "rewrites": [{
-    { "source": "/src", "destination": "/server.js"     }]
+    { "source": "/src", "destination": "/server.js"     }
     { "outputDirectory": "build"}
     { "installCommand": "npm install"   }
     
