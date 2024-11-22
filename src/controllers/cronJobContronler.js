@@ -14,7 +14,7 @@ const cronJobGame1p = (io) => {
 
         await k5Controller.add5D(1);
         await k5Controller.handling5D(1);
-        const [k5D] = await connection.execute('SELECT * FROM 5d WHERE `game` = 1 ORDER BY `id` DESC LIMIT 2 ', []);
+        const [k5D] = await connection.execute('SELECT * FROM d5 WHERE `game` = 1 ORDER BY `id` DESC LIMIT 2 ', []);
         const data2 = k5D; // Cầu mới chưa có kết quả
         io.emit('data-server-5d', { data: data2, 'game': '1' });
 
@@ -34,7 +34,7 @@ const cronJobGame1p = (io) => {
 
         await k5Controller.add5D(3);
         await k5Controller.handling5D(3);
-        const [k5D] = await connection.execute('SELECT * FROM 5d WHERE `game` = 3 ORDER BY `id` DESC LIMIT 2 ', []);
+        const [k5D] = await connection.execute('SELECT * FROM d5 WHERE `game` = 3 ORDER BY `id` DESC LIMIT 2 ', []);
         const data2 = k5D; // Cầu mới chưa có kết quả
         io.emit('data-server-5d', { data: data2, 'game': '3' });
 
@@ -54,7 +54,7 @@ const cronJobGame1p = (io) => {
 
         await k5Controller.add5D(5);
         await k5Controller.handling5D(5);
-        const [k5D] = await connection.execute('SELECT * FROM 5d WHERE `game` = 5 ORDER BY `id` DESC LIMIT 2 ', []);
+        const [k5D] = await connection.execute('SELECT * FROM d5 WHERE `game` = 5 ORDER BY `id` DESC LIMIT 2 ', []);
         const data2 = k5D; // Cầu mới chưa có kết quả
         io.emit('data-server-5d', { data: data2, 'game': '5' });
 
@@ -75,7 +75,7 @@ const cronJobGame1p = (io) => {
         
         await k5Controller.add5D(10);
         await k5Controller.handling5D(10);
-        const [k5D] = await connection.execute('SELECT * FROM 5d WHERE `game` = 10 ORDER BY `id` DESC LIMIT 2 ', []);
+        const [k5D] = await connection.execute('SELECT * FROM d5 WHERE `game` = 10 ORDER BY `id` DESC LIMIT 2 ', []);
         const data2 = k5D; // Cầu mới chưa có kết quả
         io.emit('data-server-5d', { data: data2, 'game': '10' });
 

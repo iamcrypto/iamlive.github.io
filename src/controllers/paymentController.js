@@ -384,58 +384,98 @@ const verifyUPIPayment = async (req, res) => {
     }
 }
 
-const initiatePiPayment = async (req, res) => {
+const initiateWowPayPayment = async (req, res) => {
     const type = PaymentMethodsMap.WOW_PAY
     let auth = req.cookies.auth;
     let money = parseInt(req.query.money);
 
-    // const minimumMoneyAllowed = parseInt(process.env.MINIMUM_MONEY)
+    const minimumMoneyAllowed = parseInt(process.env.MINIMUM_MONEY)
 
-    // if (!money || !(money >= minimumMoneyAllowed)) {
-    //     return res.status(400).json({
-    //         message: `Money is Required and it must be ₹${minimumMoneyAllowed} or above!`,
-    //         status: false,
-    //         timeStamp: timeNow,
-    //     })
-    // }
+    if (!money || !(money >= minimumMoneyAllowed)) {
+        return res.status(400).json({
+            message: `Money is Required and it should be ₹${minimumMoneyAllowed} or above!`,
+            status: false,
+            timeStamp: timeNow,
+        })
+    }
 
     try {
         const user = await getUserDataByAuthToken(auth)
-        const query = req.query
 
-        const [bank_recharge_momo] = await connection.query("SELECT * FROM bank_recharge WHERE type = 'momo'");
-    
-        let bank_recharge_momo_data
-        if (bank_recharge_momo.length) {
-            bank_recharge_momo_data = bank_recharge_momo[0]
+        const pendingRechargeList = await rechargeTable.getRecordByPhoneAndStatus({ phone: user.phone, status: PaymentStatusMap.PENDING, type: PaymentMethodsMap.UPI_GATEWAY })
+
+        if (pendingRechargeList.length !== 0) {
+            const deleteRechargeQueries = pendingRechargeList.map(recharge => {
+                return rechargeTable.cancelById(recharge.id)
+            });
+
+            await Promise.all(deleteRechargeQueries)
         }
-    
-        const momo = {
-            bank_name: bank_recharge_momo_data?.name_bank || "",
-            username: bank_recharge_momo_data?.name_user || "",
-            upi_id: bank_recharge_momo_data?.stk || "",
-            usdt_wallet_address: bank_recharge_momo_data?.qr_code_image || "",
+
+        const orderId = getRechargeOrderId()
+        const date = wowpay.getCurrentDate()
+
+        const params = {
+            version: '1.0',
+            // mch_id: 222887002,
+            mch_id: process.env.WOWPAY_MERCHANT_ID,
+            mch_order_no: orderId,
+            // pay_type: '151',
+            pay_type: '151',
+            trade_amount: money,
+            order_date: date,
+            goods_name: user.phone,
+            // notify_url: `${process.env.APP_BASE_URL}/wallet/verify/wowpay`,
+            notify_url: `https://247cashwin.cloud/wallet/verify/wowpay`,
+            mch_return_msg: user.phone,
+            // payment_key: 'TZLMQ1QWJCUSFLH02LAYRZBJ1WK7IHSG',
+        };
+
+        params.page_url = 'https://247cashwin.cloud/wallet/verify/wowpay';
+
+        params.sign = wowpay.generateSign(params, process.env.WOWPAY_MERCHANT_KEY);
+        // params.sign = wowpay.generateSign(params, 'TZLMQ1QWJCUSFLH02LAYRZBJ1WK7IHSG');
+        // params.sign = wowpay.generateSign(params, 'MZBG89MDIBEDWJOJQYEZVSNP8EEVMSPM');
+        params.sign_type = "MD5";
+
+
+        console.log(params)
+
+        const response = await axios({
+            method: "post",
+            url: 'https://pay6de1c7.wowpayglb.com/pay/web',
+            data: querystring.stringify(params)
+        })
+
+        console.log(response.data)
+
+        if (response.data.respCode === "SUCCESS" && response.data.payInfo) {
+            return res.status(200).json({
+                message: "Payment requested Successfully",
+                payment_url: response.data.payInfo,
+                status: true,
+                timeStamp: timeNow,
+            })
         }
-    
-        return res.render("wallet/pipay.ejs", {
-            Amount: query?.am,
-            UsdtWalletAddress: momo.usdt_wallet_address,
-        });
-    
-       
+
+
+        return res.status(400).json({
+            message: "Payment request failed. Please try again Or Wrong Details.",
+            status: false,
+            timeStamp: timeNow,
+        })
     } catch (error) {
-       
         console.log(error)
         return res.status(500).json({
             status: false,
             message: "Something went wrong!",
             timestamp: timeNow
         })
-     }
+    }
 }
 
 
-const verifyPiPayment = async (req, res) => {
+const verifyWowPayPayment = async (req, res) => {
     try {
         const type = PaymentMethodsMap.WOW_PAY
         let data = req.body;
@@ -690,8 +730,8 @@ const rechargeTable = {
 module.exports = {
     initiateUPIPayment,
     verifyUPIPayment,
-    initiatePiPayment,
-    verifyPiPayment,
+    initiateWowPayPayment,
+    verifyWowPayPayment,
     initiateManualUPIPayment,
     addManualUPIPaymentRequest,
     addManualUSDTPaymentRequest,
