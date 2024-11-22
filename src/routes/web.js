@@ -56,13 +56,13 @@ const initWebRouter = (app) => {
     router.get('/wallet/transactionhistory', middlewareController, homeController.transactionhistoryPage);
     
 
-    router.get('/wallet/paynow/manual_upi', middlewareController, paymentController.initiateManualUPIPayment); 
+    router.get('/wallet/paynow/manual_upi', middlewareController, paymentController.initiateManualUPIPayment);
     router.get('/wallet/paynow/manual_usdt', middlewareController, paymentController.initiateManualUSDTPayment);
     router.post('/wallet/paynow/manual_upi_request', middlewareController, paymentController.addManualUPIPaymentRequest);
     router.post('/wallet/paynow/manual_usdt_request', middlewareController, paymentController.addManualUSDTPaymentRequest);
-    router.get('/wallet/paynow/pipay', middlewareController, paymentController.initiatePiPayment);
-    router.post('/wallet/verify/pipay', middlewareController, paymentController.verifyPiPayment);
-    router.get('/wallet/verify/pipay', middlewareController, paymentController.verifyPiPayment);
+    router.post('/wallet/paynow/wowpay', middlewareController, paymentController.initiateWowPayPayment);
+    router.post('/wallet/verify/wowpay', middlewareController, paymentController.verifyWowPayPayment);
+    router.get('/wallet/verify/wowpay', middlewareController, paymentController.verifyWowPayPayment);
     router.post('/wallet/paynow/upi', middlewareController, paymentController.initiateUPIPayment);
     router.get('/wallet/verify/upi', middlewareController, paymentController.verifyUPIPayment);
 
