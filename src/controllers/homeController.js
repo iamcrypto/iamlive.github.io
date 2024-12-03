@@ -124,6 +124,10 @@ const aboutPage = async (req, res) => {
     return res.render("member/about/index.ejs");
 }
 
+const chatPage = async (req, res) => {
+    return res.render("member/chat.ejs");
+}
+
 const recordsalary = async (req, res) => {
     return res.render("member/about/recordsalary.ejs");
 }
@@ -185,6 +189,7 @@ const getSalaryRecord = async (req, res) => {
 }
 module.exports = {
     homePage,
+    chatPage,
     checkInPage,
     invibonusPage,
     rebatePage,
