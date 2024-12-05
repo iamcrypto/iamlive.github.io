@@ -587,6 +587,7 @@ border-radius: 5px;
     <script>
       window.onload = function() {
 	  var chatname = "chat123";
+console.log("hi this is document loader testing");
 	  
 var firebaseConfig = {
     apiKey: "AIzaSyDRtK5Z_TAgMUhDIBAV2X_psj4n5D09iqw",
@@ -1099,6 +1100,7 @@ if(app.get_name() != null){
               };
               $('.name').text(data.data.name_user);
 			  chatname = data.data.name_user;
+console.log("hi this is cookie testing");
               $('.profile .id').text(data.data.id_user);
               $('.profile .number').text("+91 " + data.data.phone_user);
           });
