@@ -31,7 +31,7 @@
 
     <!-- The CSS and JS file must be declared after the things above-->
 
-    <!-- <style>
+    <style>
       body{
 
 /* https://www.color-hex.com/color/d3d3d3 */
@@ -580,14 +580,15 @@ border-radius: 5px;
 
 
 
-     </style> -->
+     </style>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
       window.onload = function() {
-
-        var firebaseConfig = {
+	  var chatname = "chat123";
+	  
+var firebaseConfig = {
     apiKey: "AIzaSyDRtK5Z_TAgMUhDIBAV2X_psj4n5D09iqw",
     authDomain: "live-chess-dede7.firebaseapp.com",
     databaseURL: "https://live-chess-dede7-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -613,20 +614,12 @@ class MEME_CHAT{
   // Home() is used to create the home page
 
   home(){
-
-    // First clear the body before adding in
-
-    // a title and the join form
-
     document.body.innerHTML = ''
 
     this.create_title()
-
-    this.create_join_form()
+	this.create_chat()
 
   }
-
-  // chat() is used to create the chat page
 
   chat(){
 
@@ -635,8 +628,6 @@ class MEME_CHAT{
     this.create_chat()
 
   }
-
-  // create_title() is used to create the title
 
   create_title(){
 
@@ -655,7 +646,7 @@ class MEME_CHAT{
 
     title.setAttribute('id', 'title')
 
-    title.textContent = 'Title'
+    title.textContent = 'SandGame 3k'
 
 
     title_inner_container.append(title)
@@ -663,110 +654,6 @@ class MEME_CHAT{
     title_container.append(title_inner_container)
 
     document.body.append(title_container)
-
-  }
-
-  // create_join_form() creates the join form
-
-  create_join_form(){
-
-    // YOU MUST HAVE (PARENT = THIS). OR NOT. I'M NOT YOUR BOSS!😂
-
-    var parent = this;
-
-
-    var join_container = document.createElement('div')
-
-    join_container.setAttribute('id', 'join_container')
-
-    var join_inner_container = document.createElement('div')
-
-    join_inner_container.setAttribute('id', 'join_inner_container')
-
-
-    var join_button_container = document.createElement('div')
-
-    join_button_container.setAttribute('id', 'join_button_container')
-
-
-    var join_button = document.createElement('button')
-
-    join_button.setAttribute('id', 'join_button')
-
-    join_button.innerHTML = 'Join <i class="fas fa-sign-in-alt"></i>'
-
-
-    var join_input_container = document.createElement('div')
-
-    join_input_container.setAttribute('id', 'join_input_container')
-
-
-    var join_input = document.createElement('input')
-
-    join_input.setAttribute('id', 'join_input')
-
-    join_input.setAttribute('maxlength', 15)
-
-    join_input.placeholder = 'No.... It\'s Patrick Star'
-
-    // Every time we type into the join_input
-
-    join_input.onkeyup  = function(){
-
-      // If the input we have is longer that 0 letters
-
-      if(join_input.value.length > 0){
-
-        // Make the button light up
-
-        join_button.classList.add('enabled')
-
-        // Allow the user to click the button
-
-        join_button.onclick = function(){
-
-          // Save the name to local storage. Passing in
-
-          // the join_input.value
-
-          parent.save_name(join_input.value)
-
-          // Remove the join_container. So the site doesn't look weird.
-
-          join_container.remove()
-
-          // parent = this. But it is not the join_button
-
-          // It is (MEME_CHAT = this).
-
-          parent.create_chat()
-
-        }
-
-      }else{
-
-        // If the join_input is empty then turn off the
-
-        // join button
-
-        join_button.classList.remove('enabled')
-
-      }
-
-    }
-
-
-    // Append everything to the body
-
-    join_button_container.append(join_button)
-
-    join_input_container.append(join_input)
-
-    join_inner_container.append(join_input_container, join_button_container)
-
-    join_container.append(join_inner_container)
-
-    document.body.append(join_container)
 
   }
 
@@ -863,7 +750,7 @@ class MEME_CHAT{
 
     // Get the name of the user
 
-    chat_input.placeholder = `${parent.get_name()}. Say something...`
+    chat_input.placeholder = `${chatname}. Say something...`
 
     chat_input.onkeyup  = function(){
 
@@ -912,35 +799,10 @@ class MEME_CHAT{
     }
 
 
-    var chat_logout_container = document.createElement('div')
-
-    chat_logout_container.setAttribute('id', 'chat_logout_container')
-
-
-    var chat_logout = document.createElement('button')
-
-    chat_logout.setAttribute('id', 'chat_logout')
-
-    chat_logout.textContent = `${parent.get_name()} • logout`
-
-    // "Logout" is really just deleting the name from the localStorage
-
-    chat_logout.onclick = function(){
-
-      localStorage.clear()
-
-      // Go back to home page
-
-      parent.home()
-
-    }
-
-
-    chat_logout_container.append(chat_logout)
-
+ 
     chat_input_container.append(chat_input, chat_input_send)
 
-    chat_inner_container.append(chat_content_container, chat_input_container, chat_logout_container)
+    chat_inner_container.append(chat_content_container, chat_input_container)
 
     chat_container.append(chat_inner_container)
 
@@ -956,15 +818,7 @@ class MEME_CHAT{
 
   }
 
-  // Save name. It literally saves the name to localStorage
-
-  save_name(name){
-
-    // Save name to localStorage
-
-    localStorage.setItem('name', name)
-
-  }
+ 
 
   // Sends message/saves the message to firebase database
 
@@ -980,12 +834,6 @@ class MEME_CHAT{
 
     // localstorage themselves. But hacking sounds cooler!!
 
-    if(parent.get_name() == null && message == null){
-
-      return
-
-    }
-
 
     // Get the firebase database value
 
@@ -997,7 +845,7 @@ class MEME_CHAT{
 
       db.ref('chats/' + `message_${index}`).set({
 
-        name: parent.get_name(),
+        name: chatname,
 
         message: message,
 
@@ -1128,8 +976,7 @@ class MEME_CHAT{
         var name = data.name
 
         var message = data.message
-
-
+		
         var message_container = document.createElement('div')
 
         message_container.setAttribute('class', 'message_container')
@@ -1151,7 +998,6 @@ class MEME_CHAT{
 
         message_user.textContent = `${name}`
 
-
         var message_content_container = document.createElement('div')
 
         message_content_container.setAttribute('class', 'message_content_container')
@@ -1160,9 +1006,8 @@ class MEME_CHAT{
         var message_content = document.createElement('p')
 
         message_content.setAttribute('class', 'message_content')
-
-        message_content.textContent = `${message}`
-
+		
+		message_content.textContent = `${message}`
 
         message_user_container.append(message_user)
 
@@ -1205,6 +1050,7 @@ if(app.get_name() != null){
 }
 
 }
+
     </script>
 
 
@@ -1212,36 +1058,8 @@ if(app.get_name() != null){
 
   <body>
         
-    <div id="app">
 
-
-      <div data-v-9f3a9836="" class="mian">
-          <div data-v-106b99c8="" data-v-9f3a9836="" class="navbar">
-              <div data-v-106b99c8="" class="navbar-left" onclick="location.href='/home'">
-                  <div data-v-106b99c8="" class="bank c-row c-row-middle-center">
-                      <img data-v-106b99c8="" src="/images/back.c3244ab0.png" class="navbar-back">
-                  </div>
-              </div>
-            
-          </div>
-          
-              
-             
-              <div data-v-9f3a9836="" class="item c-row c-row-between">
-                  <div data-v-9f3a9836="" class="lab">Username</div>
-                  <div data-v-9f3a9836="" class="txt c-row c-row-middle-center">
-                      <span class="name"> </span>
-                      
-                  </div>
-              </div>
-              
-          
-         
-          
-          
-          
-      </div>
-  </div>
+  </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="/js/client.js"></script>
   <script>
@@ -1280,15 +1098,12 @@ if(app.get_name() != null){
                   return false;
               };
               $('.name').text(data.data.name_user);
+			  chatname = data.data.name_user;
               $('.profile .id').text(data.data.id_user);
               $('.profile .number').text("+91 " + data.data.phone_user);
           });
   </script>
-  <!---->
-  
 
 
 
-  </body>
-
-   </html>
+</html>
