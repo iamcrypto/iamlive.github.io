@@ -32,7 +32,7 @@ body{
   
   #title_container{
   
-    width: 40%;
+    width: 100%;
   
     height: 155px;
   
@@ -105,124 +105,10 @@ body{
   }
   
   
-  #join_container{
-  
-    width: 100%;
-  
-    height: 200px;
-  
-  
-    display: flex;
-  
-    justify-content: center;
-  
-    align-items: center;
-  
-  
-    float: left;
-  
-    margin-top: 80px;
-  
-  
-  }
-  
-  #join_inner_container{
-  
-    width: 50%;
-  
-    height: 100%;
-  
-  }
-  
-  #join_input_container{
-  
-    width: 100%;
-  
-    height: 50px;
-  
-  
-    display: flex;
-  
-    justify-content: center;
-  
-    align-items: center;
-  
-  
-    float: left;
-  
-  }
-  
-  #join_input{
-  
-    width: 60%;
-  
-    height: 40px;
-  
-  
-    color: #1D3354;
-  
-    font-family: Varela Round;
-  
-    font-size: 15px;
-  
-    font-weight: bold;
-  
-    text-align: center;
-  
-    background-color: Transparent;
-  
-    border-bottom: 2px dashed #1D3354;
-  
-  
-  }
-  
-  #join_input:focus{
-  
-    box-shadow: 0 10px 30px -17px #1D3354;
-  
-  }
-  
-  #join_button_container{
-  
-    width: 100%;
-  
-    height: 50px;
-  
-  
-    display: flex;
-  
-    justify-content: center;
-  
-    align-items: center;
-  
-  
-    float: left;
-  
-  }
-  
-  #join_button{
-  
-    width: 60%;
-  
-    height: 40px;
-  
-  
-    font-family: Varela Round;
-  
-    font-size: 15px;
-  
-    font-weight: bold;
-  
-    text-align: center;
-  
-    color: #fff;
-  
-  }
-  
   
   #chat_container{
   
-    width: 40%;
+    width: 100%;
   
     height: 450px;
   
