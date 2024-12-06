@@ -35,6 +35,6 @@ socketIoController.sendMessageAdmin(io);
 // });
 
 server.listen(port, () => {
-    console.log("Connected success port: " + port);
+    console.log("http://localhost:" + port);
 });
 
