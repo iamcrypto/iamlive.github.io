@@ -128,6 +128,10 @@ const chatPage = async (req, res) => {
     return res.render("member/chat.ejs");
 }
 
+const wingochat = async (req, res) => {
+    return res.render("member/wingochat.ejs");
+}
+
 const recordsalary = async (req, res) => {
     return res.render("member/about/recordsalary.ejs");
 }
@@ -200,6 +204,7 @@ module.exports = {
     promotionPage,
     promotion1Page,
     walletPage,
+	wingochat,
     mianPage,
     myProfilePage,
     promotionmyTeamPage,
