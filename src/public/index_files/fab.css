@@ -61,9 +61,13 @@ body {
   .floatingMenu {
       position: absolute;
       bottom: 60px;
-      right: 15px;
-      /* width: 200px; */
+      right: 0px;
+      width: 60px;
       display: none;
+  }
+
+  .floatingMenu li a i {
+    font-size: 40px;
   }
   
   .floatingMenu li {
