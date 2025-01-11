@@ -1262,8 +1262,8 @@ const transfer = async (req, res) => {
             if (receiver.length === 1 && sender_phone !== receiver_phone) {
                 let money = sender_money - amount;
                 let total_money = amount + receiver[0].total_money;
-                // await connection.query('UPDATE users SET money = ? WHERE phone = ?', [money, sender_phone]);
-                // await connection.query(`UPDATE users SET money = money + ? WHERE phone = ?`, [amount, receiver_phone]);
+                await connection.query('UPDATE users SET money = ? WHERE phone = ?', [money, sender_phone]);
+                await connection.query(`UPDATE users SET money = money + ? WHERE phone = ?`, [amount, receiver_phone]);
                 const sql = "INSERT INTO balance_transfer (sender_phone, receiver_phone, amount) VALUES (?, ?, ?)";
                 await connection.execute(sql, [sender_phone, receiver_phone, amount]);
                 const sql_recharge = "INSERT INTO recharge (id_order, transaction_id, phone, money, type, status, today, url, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
