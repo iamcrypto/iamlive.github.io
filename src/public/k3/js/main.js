@@ -112,6 +112,11 @@ $(".circular .li").click(function (e) {
     $("body").addClass("van-overflow-hidden");
 });
 
+
+$('.van-overlay').click(function (e) {
+    e.preventDefault();
+    $(".van-overlay, .pop-quytac, .pop-quytac-buy").fadeOut(300);
+});
 $(".pop-quytac button, .pop-quytac-buy button").click(function (e) {
     e.preventDefault();
     $(".van-overlay, .pop-quytac, .pop-quytac-buy").fadeOut(300);
@@ -414,6 +419,7 @@ $('.game-minutes .img, .game-minutes .txt').click(function (e) {
 
     let data = $(this).attr('data');
     $('html').attr('data-dpr', data);
+    $('#history').click()
     callAjaxMeJoin();
     callListOrder();
 });
@@ -1106,5 +1112,12 @@ $('.confirm').click(async function (e) {
     } else if (game == 4) {
         await sendGame4();
     }
-    callAjaxMeJoin();
+    setTimeout(
+        function() 
+        {
+            callAjaxMeJoin();
+        }, 2000);
+    
 });
+
+
