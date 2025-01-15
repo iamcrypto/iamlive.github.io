@@ -21,14 +21,14 @@ const CreateWingo = async(req, res) => {
 const Create5D = async(req, res) => {
     
     // Reset DataBase 5D
-    await connection.execute('DELETE FROM d5');
+    await connection.execute('DELETE FROM 5d');
 
     let arr = [10, 5, 3, 1];
 
     for (let i = 0; i < arr.length; i++) {
-        const sql = "INSERT INTO d5 SET period = ?, result = ?, game = ?, status = 1, time = ?";
+        const sql = "INSERT INTO 5d SET period = ?, result = ?, game = ?, status = 1, time = ?";
         await connection.execute(sql, ['2022070110000', '23521', arr[i], timeNow]);
-        const sql_1 = "INSERT INTO d5 SET period = ?, result = ?, game = ?, status = 0, time = ?";
+        const sql_1 = "INSERT INTO 5d SET period = ?, result = ?, game = ?, status = 0, time = ?";
         await connection.execute(sql_1, ['2022070110001', '0', arr[i], timeNow]);
     }
     console.log("Create Success Database 5D.");

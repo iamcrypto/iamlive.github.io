@@ -131,7 +131,7 @@ const betK5D = async (req, res) => {
             });
         }
 
-        const [k5DNow] = await connection.query(`SELECT period FROM d5 WHERE status = 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
+        const [k5DNow] = await connection.query(`SELECT period FROM 5d WHERE status = 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
         const [user] = await connection.query('SELECT `phone`, `code`, `invite`, `level`, `money` FROM users WHERE token = ? AND veri = 1  LIMIT 1 ', [auth]);
         if (k5DNow.length < 1 || user.length < 1) {
             return res.status(200).json({
@@ -206,9 +206,9 @@ const listOrderOld = async (req, res) => {
 
     let game = Number(gameJoin);
 
-    const [k5d] = await connection.query(`SELECT * FROM d5 WHERE status != 0 AND game = '${game}' ORDER BY id DESC LIMIT ${pageno}, ${pageto} `);
-    const [k5dAll] = await connection.query(`SELECT * FROM d5 WHERE status != 0 AND game = '${game}' `);
-    const [period] = await connection.query(`SELECT period FROM d5 WHERE status = 0 AND game = '${game}' ORDER BY id DESC LIMIT 1 `);
+    const [k5d] = await connection.query(`SELECT * FROM 5d WHERE status != 0 AND game = '${game}' ORDER BY id DESC LIMIT ${pageno}, ${pageto} `);
+    const [k5dAll] = await connection.query(`SELECT * FROM 5d WHERE status != 0 AND game = '${game}' `);
+    const [period] = await connection.query(`SELECT period FROM 5d WHERE status = 0 AND game = '${game}' ORDER BY id DESC LIMIT 1 `);
     if (k5d.length == 0) {
         return res.status(200).json({
             code: 0,
@@ -316,7 +316,7 @@ const add5D = async(game) => {
 
         let result2 = makeid(5);
         let timeNow = Date.now();
-        let [k5D] = await connection.query(`SELECT period FROM d5 WHERE status = 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
+        let [k5D] = await connection.query(`SELECT period FROM 5d WHERE status = 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
         const [setting] = await connection.query('SELECT * FROM `admin` ');
         let period = k5D[0].period;
 
@@ -328,7 +328,7 @@ const add5D = async(game) => {
 
         let newArr = '';
         if (nextResult == '-1') {
-            await connection.execute(`UPDATE d5 SET result = ?,status = ? WHERE period = ? AND game = "${game}"`, [result2, 1, period]);
+            await connection.execute(`UPDATE 5d SET result = ?,status = ? WHERE period = ? AND game = "${game}"`, [result2, 1, period]);
             newArr = '-1';
         } else {
             let result = '';
@@ -343,9 +343,9 @@ const add5D = async(game) => {
                 newArr = newArr.slice(0, -1);
             }
             result = arr[0];
-            await connection.execute(`UPDATE d5 SET result = ?,status = ? WHERE period = ? AND game = ${game}`, [result, 1, period]);
+            await connection.execute(`UPDATE 5d SET result = ?,status = ? WHERE period = ? AND game = ${game}`, [result, 1, period]);
         }
-        const sql = `INSERT INTO d5 SET period = ?, result = ?, game = ?, status = ?, time = ?`;
+        const sql = `INSERT INTO 5d SET period = ?, result = ?, game = ?, status = ?, time = ?`;
         await connection.execute(sql, [Number(period) + 1, 0, game, 0, timeNow]);
 
         if (game == 1) join = 'k5d';
@@ -362,7 +362,7 @@ const add5D = async(game) => {
 }
 
 async function funHanding(game) {
-    const [k5d] = await connection.query(`SELECT * FROM d5 WHERE status != 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
+    const [k5d] = await connection.query(`SELECT * FROM 5d WHERE status != 0 AND game = ${game} ORDER BY id DESC LIMIT 1 `);
     let k5dInfo = k5d[0];
  
     // update ket qua
