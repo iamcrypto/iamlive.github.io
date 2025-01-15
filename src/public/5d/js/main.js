@@ -726,6 +726,7 @@ function callAjaxMeJoin() {
         success: function (response) {
             let data = response.data.gameslist;
             $("#number_result").text("1/" + response.page);
+            //console.log("123");
             GetMyEmerdList(data);
             $('.Loading').fadeOut(0);
         },
