@@ -1,3 +1,5 @@
+var Rules_var='rule_close';
+
 function totalMoney() {
     let amount = $('.xvalue').val();
     let money = $('.amount-box').find('.action').attr("value");
@@ -108,6 +110,7 @@ $(window).resize(() => {
 
 $(".circular .li").click(function (e) {
     e.preventDefault();
+    Rules_var = 'rule_open';
     $(".van-overlay, .pop-quytac").fadeIn(300);
     $("body").addClass("van-overflow-hidden");
 });
@@ -115,6 +118,7 @@ $(".circular .li").click(function (e) {
 
 $('.van-overlay').click(function (e) {
     e.preventDefault();
+    Rules_var = 'rule_close';
     $(".van-overlay, .pop-quytac, .pop-quytac-buy").fadeOut(300);
 });
 $(".pop-quytac button, .pop-quytac-buy button").click(function (e) {
@@ -260,6 +264,7 @@ $('.minus-plus .plus').click(function (e) {
 
 $('.txt-qu-ytac').click(function (e) {
     e.preventDefault();
+    Rules_var='rule_open';
     $('.pop-quytac-buy').fadeIn(200);
     $('.van-overlay').fadeIn(200);
 });
@@ -323,6 +328,7 @@ function playAudio2() {
 
 function cownDownTimer() {
     let countDownDate = new Date("2030-07-16T23:59:59.9999999+01:00").getTime();
+    $('#kd_submit').addClass('confirm');
     setInterval(function () {
         let now = new Date().getTime();
         let distance = countDownDate - now;
@@ -419,7 +425,8 @@ $('.game-minutes .img, .game-minutes .txt').click(function (e) {
 
     let data = $(this).attr('data');
     $('html').attr('data-dpr', data);
-    $('#history').click()
+    $('#history').click();
+    $('#kd_submit').addClass('confirm');
     callAjaxMeJoin();
     callListOrder();
 });
@@ -436,7 +443,7 @@ $('.bet-tab .item').click(function (e) {
     $('.list-join-ao span').addClass('d-none');
     $('.bet-tab .item').removeClass('block-click');
     $(this).addClass('block-click');
-
+    $('#kd_submit').addClass('confirm');
     dropDown();
 });
 
@@ -1120,4 +1127,25 @@ $('.confirm').click(async function (e) {
     
 });
 
+function tdOnclick(e) {
+    if($(e).find('input[type=checkbox]').is(':checked') == false)
+    {
+     $(e).find('input[type=checkbox]').prop('checked', true);
+     $(e).find('.checkmark1').html('&#10004;');
+     $(e).find('.checkmark1').css('background-color', '#171b3f');
+     $(e).find('.checkmark1').css('border', 'white 2px solid');
+     $('#kd_submit').removeClass('kdisablesub-button');
+     $('#kd_submit').removeClass('confirm');
+     $('#kin_submit').removeClass('kspan_db');
+    }
+    else{
+     $(e).find('input[type=checkbox]').prop('checked', false);
+     $(e).find('.checkmark1').html('');
+     $(e).find('.checkmark1').css('background-color', 'white');
+     $(e).find('.checkmark1').css('border', '#171b3f 2px solid');
+     $('#kd_submit').addClass('kdisablesub-button');
+     $('#kd_submit').addClass('confirm');
+     $('#kin_submit').addClass('kspan_db');
+    }
+ }
 

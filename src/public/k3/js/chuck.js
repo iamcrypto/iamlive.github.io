@@ -24,6 +24,7 @@ socket.on("data-server-k3", function (msg) {
             $("#next").removeClass("block-click");
             $("#next").addClass("action");
             $("#next .van-icon-arrow").css("color", "#fff");
+            $('.container1').click();
         }
     }
 });
@@ -87,6 +88,7 @@ function ShowListOrder(list_orders) {
             </div>
         `);
     });
+    $('#kd_submit').addClass('confirm');
     $(`#list_order`).html(htmls);
 }
 

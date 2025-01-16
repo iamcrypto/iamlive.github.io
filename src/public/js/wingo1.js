@@ -99,6 +99,8 @@ socket.on("data-server", function (msg) {
       "color",
       "#fff"
     );
+
+    $('.container1').click();
     var firstGame;
 
 $.ajax({
@@ -272,9 +274,9 @@ $(".reload_money").click(function (e) {
     $(".num span").text(`₹ ${data.data.money_user}.00 `);
   });
 });
-$(".van-overlay, .foot .left").click(function (e) {
+$(".foot .left").click(function (e) {
   e.preventDefault();
-  $(".van-overlay").fadeOut();
+  //$(".van-overlay").fadeOut();
   $('.van-popup-vf').fadeOut(100);
   $(".popup-join").css("transform", "translateY(600px)");
   $(".betting-mark .amount-box .li, .multiple-box .li").css({
@@ -288,6 +290,11 @@ $(".van-overlay, .foot .left").click(function (e) {
   $(".stepper-box .digit-box input").val(1);
   $(".amount-box").attr("data-money", "1");
   $(".foot .right span:eq(1)").text(1000 + "");
+});
+
+$('.van-overlay').click(function (e) {
+  e.preventDefault();
+  $(".van-overlay, .pop-qt, .pop-quytac-buy, .popup-qt").fadeOut(300);
 });
 
 function xlad(x, color) {
@@ -1644,3 +1651,26 @@ $(`.game-betting .box .item:eq(${selectPageTime - 1}) .img .van-image img`).attr
 
 
 
+
+
+function tdOnclick(e) {
+  if($(e).find('input[type=checkbox]').is(':checked') == false)
+  {
+   $(e).find('input[type=checkbox]').prop('checked', true);
+   $(e).find('.checkmark1').html('&#10004;');
+   $(e).find('.checkmark1').css('background-color', '#171b3f');
+   $(e).find('.checkmark1').css('border', 'white 2px solid');
+   $('#wd_submit').removeClass('windisablesub-button');
+   $('#wd_submit').removeClass('confirm');
+   $('#win_submit').removeClass('winspan_db');
+  }
+  else{
+   $(e).find('input[type=checkbox]').prop('checked', false);
+   $(e).find('.checkmark1').html('');
+   $(e).find('.checkmark1').css('background-color', 'white');
+   $(e).find('.checkmark1').css('border', '#171b3f 2px solid');
+   $('#wd_submit').addClass('windisablesub-button');
+   $('#wd_submit').addClass('confirm');
+   $('#win_submit').addClass('winspan_db');
+  }
+}
