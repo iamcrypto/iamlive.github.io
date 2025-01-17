@@ -537,6 +537,7 @@ $(".number-box button").click(function (e) {
   e.preventDefault();
   let addTop = $(this).text().trim(); // xanh - do - tim (x - d - t)
   let addText = $(this).text(); // xanh - do - tim
+  $('.container1').click();
   alertBox(addTop, addText);
 });
 $(".btn-box button").click(function (e) {
@@ -1658,8 +1659,6 @@ function tdOnclick(e) {
   {
    $(e).find('input[type=checkbox]').prop('checked', true);
    $(e).find('.checkmark1').html('&#10004;');
-   $(e).find('.checkmark1').css('background-color', '#171b3f');
-   $(e).find('.checkmark1').css('border', 'white 2px solid');
    $('#wd_submit').removeClass('windisablesub-button');
    $('#wd_submit').removeClass('confirm');
    $('#win_submit').removeClass('winspan_db');
@@ -1667,8 +1666,6 @@ function tdOnclick(e) {
   else{
    $(e).find('input[type=checkbox]').prop('checked', false);
    $(e).find('.checkmark1').html('');
-   $(e).find('.checkmark1').css('background-color', 'white');
-   $(e).find('.checkmark1').css('border', '#171b3f 2px solid');
    $('#wd_submit').addClass('windisablesub-button');
    $('#wd_submit').addClass('confirm');
    $('#win_submit').addClass('winspan_db');
