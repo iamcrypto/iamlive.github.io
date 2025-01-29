@@ -42,6 +42,10 @@ const membersPage = async (req, res) => {
     return res.render("manage/members.ejs");
 }
 
+const adminChatPage = async (req, res) => {
+    return res.render("manage/aChat.ejs");
+}
+
 const ctvPage = async (req, res) => {
     return res.render("manage/ctv.ejs");
 }
@@ -467,21 +471,12 @@ const userInfo = async (req, res) => {
             }
         }
     }
-    // console.log("TOTAL_F_TODAY:" + f_all_today);
-    // console.log("F1: " + f1s.length);
-    // console.log("F2: " + f2);
-    // console.log("F3: " + f3);
-    // console.log("F4: " + f4);
-
     const [recharge] = await connection.query('SELECT SUM(`money`) as total FROM recharge WHERE phone = ? AND status = 1 ', [phone]);
     const [withdraw] = await connection.query('SELECT SUM(`money`) as total FROM withdraw WHERE phone = ? AND status = 1 ', [phone]);
     const [bank_user] = await connection.query('SELECT * FROM user_bank WHERE phone = ? ', [phone]);
     const [telegram_ctv] = await connection.query('SELECT `telegram` FROM point_list WHERE phone = ? ', [userInfo.ctv]);
     const [ng_moi] = await connection.query('SELECT `phone` FROM users WHERE code = ? ', [userInfo.invite]);
-    // console.log(bank_user);
-    // console.log(recharge);
-    // console.log(withdraw);
-    // console.log(telegram_ctv);
+
     return res.status(200).json({
         message: 'Success',
         status: true,
@@ -589,11 +584,11 @@ const rechargeDuyet = async (req, res) => {
             await connection.query(`UPDATE withdraw SET status = 1 WHERE id_order = ?`, [info?.[0]?.id_order]);
             await connection.query('UPDATE users SET money = money + ? WHERE phone = ?', [info?.[0]?.money, info?.[0]?.phone]);
             await connection.query(`UPDATE users SET money = money - ? WHERE phone = ?`, [info?.[0]?.money, withInfo.phone]);
-            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?'; 
-            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Congrates! you received an reward of "+info?.[0]?.money+" from your friend " + senderinfo?.[0]?.invite +".", '0']);
-            let sql_noti1 = "INSERT INTO notification SET recipient = ?, description = ?, isread = ?";
+            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?'; 
+            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Congrates! you received an reward of "+info?.[0]?.money+" from your friend " + senderinfo?.[0]?.code +".", '0', "Recharge"]);
+            let sql_noti1 = "INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?";
             let withdrdesc = "Amount of "+ info?.[0]?.money+ " have been transferred successfully.";
-            await connection.query(sql_noti1, [senderinfo?.[0]?.id, withdrdesc , "0"]);
+            await connection.query(sql_noti1, [senderinfo?.[0]?.id, withdrdesc , "0", "Withdraw"]);
         }
         else{
             
@@ -603,8 +598,8 @@ const rechargeDuyet = async (req, res) => {
                 phone: user.phone,
                 invite: user.invite
             });
-            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Recharge of Amount "+info?.[0]?.money+" is Successfull. ", '0']);
+            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Recharge of Amount "+info?.[0]?.money+" is Successfull. ", '0', "Recharge"]);
         }
         return res.status(200).json({
             message: 'Successful application confirmation',
@@ -715,15 +710,15 @@ const handlWithdraw = async (req, res) => {
             await connection.query(`UPDATE recharge SET status = 1 WHERE id_order = ?`, [withInfo.id_order]);
             await connection.query('UPDATE users SET money =  money - ? WHERE phone = ?', [withInfo.money, withInfo.phone]);
             await connection.query(`UPDATE users SET money = money + ? WHERE phone = ?`, [withInfo.money, rechInfo.phone]);
-            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Congrates! you received an reward of "+rechInfo.money+" from your friend " + senderinfo?.[0]?.invite +".", '0']);
-            let sql_noti1 = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-            await connection.query(sql_noti1, [senderinfo?.[0]?.id, "Amount of "+withInfo.money+ " have been transferred successfully.", '0']);
+            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+            await connection.query(sql_noti, [receiinfo?.[0]?.id, "Congrates! you received an reward of "+rechInfo.money+" from your friend " + senderinfo?.[0]?.code +".", '0', "Recharge"]);
+            let sql_noti1 = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+            await connection.query(sql_noti1, [senderinfo?.[0]?.id, "Amount of "+withInfo.money+ " have been transferred successfully.", '0', "Withdraw"]);
         }
         else
         {
-            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-            await connection.query(sql_noti, [senderinfo?.[0]?.id, "Your withdraw of amoount "+withInfo.money+" approved my admin ", '0']);
+            let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+            await connection.query(sql_noti, [senderinfo?.[0]?.id, "Your withdraw of amoount "+withInfo.money+" approved my admin.", '0', "Withdraw"]);
         }
         return res.status(200).json({
             message: 'Successful application confirmation',
@@ -2057,6 +2052,7 @@ module.exports = {
     middlewareAdminController,
     changeAdmin,
     membersPage,
+    adminChatPage,
     listMember,
     infoMember,
     userInfo,

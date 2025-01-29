@@ -451,48 +451,79 @@ const promotion = async (req, res) => {
     let userInfo = user[0];
 
     // Directly referred level-1 users
-    const [f1s] = await connection.query('SELECT `phone`, `code`,`invite`, `time` FROM users WHERE `invite` = ? ', [userInfo.code]);
+    const [f1s] = await connection.query('SELECT `phone`, `code`,`invite`, `time`,`today` FROM users WHERE `invite` = ? ', [userInfo.code]);
 
     // Directly referred users today
     let f1_today = 0;
+    let d_rech_users = 0;
+    let d_rch_u_amt = 0;
+    let f1_r_u = 0;
+    let f1_r_a = 0;
     for (let i = 0; i < f1s.length; i++) {
-        const f1_time = f1s[i].time;
-        let check = (timerJoin(f1_time) == timerJoin()) ? true : false;
+        const f1_time = f1s[i].today;
+        const [d_r1] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [userInfo.phone]);
+        f1_r_u = d_r1.length;
+        for (let i = 0; i < d_r1.length; i++) {
+            f1_r_a += f1_r_a + parseInt(d_r1[i].money);
+        }
+        let check = (new Date(f1_time).getDate() == new Date().getDate()) && (new Date(f1_time).getMonth() == new Date().getMonth()) && (new Date(f1_time).getFullYear()  == new Date().getFullYear() )  ? true : false;
         if (check) {
             f1_today += 1;
         }
     }
 
     // All direct referrals today
+    let al_d_d_u = 0;
+    let al_d_d_a = 0;
     let f_all_today = 0;
     for (let i = 0; i < f1s.length; i++) {
         const f1_code = f1s[i].code;
-        const f1_time = f1s[i].time;
-        let check_f1 = (timerJoin(f1_time) == timerJoin()) ? true : false;
+        const [ad_r1] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f1s[i].phone]);
+        al_d_d_u = parseInt(al_d_d_u) + ad_r1.length;
+        for (let i = 0; i < ad_r1.length; i++) {
+            al_d_d_a += al_d_d_a + parseInt(ad_r1[i].money);
+        }
+        const f1_time = f1s[i].today;
+        let check_f1 = (new Date(f1_time).getDate() == new Date().getDate()) && (new Date(f1_time).getMonth() == new Date().getMonth()) && (new Date(f1_time).getFullYear()  == new Date().getFullYear() )  ? true : false;
         if (check_f1) f_all_today += 1;
 
         // Total level-2 referrals today
-        const [f2s] = await connection.query('SELECT `phone`, `code`,`invite`, `time` FROM users WHERE `invite` = ? ', [f1_code]);
+        const [f2s] = await connection.query('SELECT `phone`, `code`,`invite`, `time`,`today` FROM users WHERE `invite` = ? ', [f1_code]);
         for (let i = 0; i < f2s.length; i++) {
             const f2_code = f2s[i].code;
-            const f2_time = f2s[i].time;
-            let check_f2 = (timerJoin(f2_time) == timerJoin()) ? true : false;
+            const [ad_r2] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f2s[i].phone]);
+            al_d_d_u = parseInt(al_d_d_u) + ad_r2.length;
+            for (let i = 0; i < ad_r2.length; i++) {
+                al_d_d_a += al_d_d_a + parseInt(ad_r2[i].money);
+            }
+            const f2_time = f2s[i].today;
+            let check_f2 = (new Date(f2_time).getDate() == new Date().getDate()) && (new Date(f2_time).getMonth() == new Date().getMonth()) && (new Date(f2_time).getFullYear()  == new Date().getFullYear() )  ? true : false;
             if (check_f2) f_all_today += 1;
 
             // Total level-3 referrals today
-            const [f3s] = await connection.query('SELECT `phone`, `code`,`invite`, `time` FROM users WHERE `invite` = ? ', [f2_code]);
+            const [f3s] = await connection.query('SELECT `phone`, `code`,`invite`, `time`,`today` FROM users WHERE `invite` = ? ', [f2_code]);
             for (let i = 0; i < f3s.length; i++) {
                 const f3_code = f3s[i].code;
-                const f3_time = f3s[i].time;
-                let check_f3 = (timerJoin(f3_time) == timerJoin()) ? true : false;
+                const [ad_r3] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f3s[i].phone]);
+                al_d_d_u = parseInt(al_d_d_u) + ad_r3.length;
+                for (let i = 0; i < ad_r3.length; i++) {
+                    al_d_d_a += al_d_d_a + parseInt(ad_r3[i].money);
+                }
+                const f3_time = f3s[i].today;
+                let check_f3 = (new Date(f3_time).getDate() == new Date().getDate()) && (new Date(f3_time).getMonth() == new Date().getMonth()) && (new Date(f3_time).getFullYear()  == new Date().getFullYear() )  ? true : false;
                 if (check_f3) f_all_today += 1;
 
                 // Total level-4 referrals today
-                const [f4s] = await connection.query('SELECT `phone`, `code`,`invite`, `time` FROM users WHERE `invite` = ? ', [f3_code]);
+                const [f4s] = await connection.query('SELECT `phone`, `code`,`invite`, `time`,`today` FROM users WHERE `invite` = ? ', [f3_code]);
                 for (let i = 0; i < f4s.length; i++) {
                     const f4_code = f4s[i].code;
-                    const f4_time = f4s[i].time;
-                    let check_f4 = (timerJoin(f4_time) == timerJoin()) ? true : false;
+                    const [ad_r4] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f4s[i].phone]);
+                    al_d_d_u = parseInt(al_d_d_u) + ad_r4.length;
+                    for (let i = 0; i < ad_r4.length; i++) {
+                        al_d_d_a += al_d_d_a + parseInt(ad_r4[i].money);
+                    }
+                    const f4_time = f4s[i].today;
+                    let check_f4 = (new Date(f4_time).getDate() == new Date().getDate()) && (new Date(f4_time).getMonth() == new Date().getMonth()) && (new Date(f4_time).getFullYear()  == new Date().getFullYear() )  ? true : false
                     if (check_f4) f_all_today += 1;
                 }
             }
@@ -500,26 +531,42 @@ const promotion = async (req, res) => {
     }
 
     // Total level-2 referrals
+    let f2_r_u = 0;
+    let f2_r_a = 0;
     let f2 = 0;
     for (let i = 0; i < f1s.length; i++) {
         const f1_code = f1s[i].code;
+        const [d_r2] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f1s[i].phone]);
+        f2_r_u = d_r2.length;
+        for (let i = 0; i < d_r2.length; i++) {
+            f2_r_a += f2_r_a + parseInt(d_r2[i].money);
+        }
         const [f2s] = await connection.query('SELECT `phone`, `code`,`invite` FROM users WHERE `invite` = ? ', [f1_code]);
         f2 += f2s.length;
     }
 
     // Total level-3 referrals
+    let f3_r_u = 0;
+    let f3_r_a = 0;
     let f3 = 0;
     for (let i = 0; i < f1s.length; i++) {
         const f1_code = f1s[i].code;
         const [f2s] = await connection.query('SELECT `phone`, `code`,`invite` FROM users WHERE `invite` = ? ', [f1_code]);
         for (let i = 0; i < f2s.length; i++) {
             const f2_code = f2s[i].code;
+            const [d_r3] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f2s[i].phone]);
+            f3_r_u = d_r3.length;
+            for (let i = 0; i < d_r3.length; i++) {
+                f3_r_a += f3_r_a + parseInt(d_r3[i].money);
+            }
             const [f3s] = await connection.query('SELECT `phone`, `code`,`invite` FROM users WHERE `invite` = ? ', [f2_code]);
             if (f3s.length > 0) f3 += f3s.length;
         }
     }
 
     // Total level-4 referrals
+    let f4_r_u = 0;
+    let f4_r_a = 0;
     let f4 = 0;
     for (let i = 0; i < f1s.length; i++) {
         const f1_code = f1s[i].code;
@@ -529,11 +576,17 @@ const promotion = async (req, res) => {
             const [f3s] = await connection.query('SELECT `phone`, `code`,`invite` FROM users WHERE `invite` = ? ', [f2_code]);
             for (let i = 0; i < f3s.length; i++) {
                 const f3_code = f3s[i].code;
+                const [d_r4] = await connection.query('SELECT `phone`,`money` FROM recharge WHERE `phone` = ? AND `status` = 1', [f3s[i].phone]);
+                f4_r_u = d_r4.length;
+                for (let i = 0; i < d_r4.length; i++) {
+                    f4_r_a += f4_r_a + parseInt(d_r4[i].money);
+                }
                 const [f4s] = await connection.query('SELECT `phone`, `code`,`invite` FROM users WHERE `invite` = ? ', [f3_code]);
                 if (f4s.length > 0) f4 += f4s.length;
             }
         }
     }
+
 
     let selectedData = [];
 
@@ -562,6 +615,8 @@ const promotion = async (req, res) => {
     const rosesF1 = parseFloat(userInfo.roses_f);
     const rosesAll = parseFloat(userInfo.roses_f1);
     let rosesAdd = rosesF1 + rosesAll;
+    d_rech_users = f1_r_u + f2_r_u + f3_r_u + f4_r_u;
+    d_rch_u_amt = f1_r_a + f2_r_a + f3_r_a + f4_r_a;
 
     return res.status(200).json({
         message: 'Receive success',
@@ -577,6 +632,16 @@ const promotion = async (req, res) => {
             roses_f: userInfo.roses_f,
             roses_all: rosesAdd,
             roses_today: userInfo.roses_today,
+
+            d_n_register: f1s.length,
+            d_dep_num: al_d_d_u ,
+            d_d_amount: al_d_d_a,
+            d_p_f_deposit: al_d_d_u,
+
+            ts_n_register: selectedData.length,
+            ts_dep_num: d_rech_users,
+            ts_d_amount: d_rch_u_amt,
+            ts_p_f_deposit: d_rech_users,
         },
         timeStamp: timeNow,
     });
@@ -1111,25 +1176,38 @@ const withdrawal3 = async (req, res) => {
     let checkTime = timerJoin(dates);
     const [recharge] = await connection.query('SELECT * FROM recharge WHERE phone = ? AND status = 1', [userInfo.phone]);
     const [minutes_1] = await connection.query('SELECT * FROM minutes_1 WHERE phone = ?', [userInfo.phone]);
+    const [k3_bet_money] = await connection.query('SELECT * FROM result_k3 WHERE phone = ?', [userInfo.phone]);
+    const [d5_bet_money] = await connection.query('SELECT * FROM result_5d WHERE phone = ?', [userInfo.phone]);
     let total = 0;
     recharge.forEach((data) => {
         total += parseFloat(data.money);
     });
     let total2 = 0;
+    let total_w = 0;
+    let total_k3 = 0;
+    let total_5d = 0;
     minutes_1.forEach((data) => {
-        total2 += parseFloat(data.money);
+        total_w += parseFloat(data.money);
     });
+    k3_bet_money.forEach((data) => {
+        total_k3 += parseFloat(data.money);
+    });
+    d5_bet_money.forEach((data) => {
+        total_5d += parseFloat(data.money);
+    });
+    total2 += parseInt(total_w) + parseInt(total_k3) + parseInt(total_5d) ;
     let result = 0;
     if (total - total2 > 0) result = total - total2;
     result = Math.max(result, 0);
+    let result2 = parseInt ((parseInt(total) * 80)/100);
     const [user_bank] = await connection.query('SELECT * FROM user_bank WHERE `phone` = ?', [userInfo.phone]);
     const [withdraw] = await connection.query('SELECT * FROM withdraw WHERE `phone` = ? AND today = ?', [userInfo.phone, checkTime]);
     if (user_bank.length != 0) {
         if (withdraw.length < 3) {
             if (userInfo.money - money >= 0) {
-                if (result == 0) {
+                if (total2 >= result2) {
                     if (total - total2 >= 0) {
-                        if (result == 0) {
+                        if (total2 >= result2) {
                             return res.status(200).json({
                                 message: 'The total bet is not enough to fulfill the request',
                                 status: false,
@@ -1200,7 +1278,7 @@ const transfer = async (req, res) => {
     let time = new Date().getTime();
     let client_transaction_id = id_order;
 
-    const [user] = await connection.query('SELECT `phone`,`money`, `code`,`invite` FROM users WHERE `token` = ? ', [auth]);
+    const [user] = await connection.query('SELECT `id`,`phone`,`money`, `code`,`invite` FROM users WHERE `token` = ? ', [auth]);
     let userInfo = user[0];
     let sender_phone = userInfo.phone;
     let sender_money = parseInt(userInfo.money);
@@ -1245,33 +1323,40 @@ const transfer = async (req, res) => {
     let checkTime = timerJoin(dates);
     const [recharge] = await connection.query('SELECT * FROM recharge WHERE phone = ? AND status = 1 ', [userInfo.phone]);
     const [minutes_1] = await connection.query('SELECT * FROM minutes_1 WHERE phone = ? ', [userInfo.phone]);
+    const [k3_bet_money] = await connection.query('SELECT * FROM result_k3 WHERE phone = ?', [userInfo.phone]);
+    const [d5_bet_money] = await connection.query('SELECT * FROM result_5d WHERE phone = ?', [userInfo.phone]);
     let total = 0;
     recharge.forEach((data) => {
-        total += data.money;
+        total += parseFloat(data.money);
     });
     let total2 = 0;
+    let total_w = 0;
+    let total_k3 = 0;
+    let total_5d = 0;
     minutes_1.forEach((data) => {
-        total2 += data.money;
+        total_w += parseFloat(data.money);
     });
+    k3_bet_money.forEach((data) => {
+        total_k3 += parseFloat(data.money);
+    });
+    d5_bet_money.forEach((data) => {
+        total_5d += parseFloat(data.money);
+    });
+    total2 += parseInt(total_w) + parseInt(total_k3) + parseInt(total_5d) ;
 
     let result = 0;
     if (total - total2 > 0) result = total - total2;
-
-    // console.log('date:', result);
-    if (result == 0) {
-        console.log(1);
+    let result2 = parseInt ((parseInt(total) * 80)/100)
+    if (total2 >= result2) {
         if (sender_money >= amount) {
-            console.log(2);
             let [receiver] = await connection.query('SELECT * FROM users WHERE `phone` = ?', [receiver_phone]);
             if (receiver.length === 1 && sender_phone !== receiver_phone) {
-                console.log(3);
                 let money = sender_money - amount;
                 let total_money = amount + receiver[0].total_money;
                 let trans_mode = '';
                 const [admin_user] = await connection.query('SELECT * FROM users WHERE level = ? ', [1]);
                 let adminInfo = admin_user[0];
                 trans_mode = adminInfo.transfer_mode; 
-                console.log(trans_mode);
                 if(trans_mode == 'instant')
                 {
                     await connection.query('UPDATE users SET money = ? WHERE phone = ?', [money, sender_phone]);
@@ -1282,11 +1367,11 @@ const transfer = async (req, res) => {
                     await connection.execute(sql_recharge, [client_transaction_id, 0, receiver_phone, amount, 'wallet', 1, checkTime, 0, time]);
                     const sql_recharge_with = "INSERT INTO withdraw (id_order, phone, money, stk, name_bank, name_user, ifsc, sdt, tp, status, today, time, type,with_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)";
                     await connection.execute(sql_recharge_with, [client_transaction_id, sender_phone, amount,0,0,0,0,0,0, 1, checkTime, time,trans_mode,'transfer']);
-                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-                    await connection.query(sql_noti, [receiver[0]?.id, "Recharge of Amount "+amount+" is successfull.", '0']);
-                    let sql_noti1 = "INSERT INTO notification SET recipient = ?, description = ?, isread = ?";
+                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+                    await connection.query(sql_noti, [receiver[0]?.id, "Congrates! you received an reward of "+amount+" from your friend " + userInfo.code +".", '0', "Recharge"]);
+                    let sql_noti1 = "INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?";
                     let withdrdesc = "Amount of "+ amount + " have been transferred successfully.";
-                    await connection.query(sql_noti1, [userInfo.id, withdrdesc , "0"]);
+                    await connection.query(sql_noti1, [userInfo.id, withdrdesc , "0", "Withdraw"]);
                     return res.status(200).json({
                         message: `Requested ${amount} sent successfully`,
                         curr_user_m:money,
@@ -1303,8 +1388,8 @@ const transfer = async (req, res) => {
                     await connection.execute(sql, [sender_phone, receiver_phone, amount]);
                     const sql_recharge = "INSERT INTO recharge (id_order, transaction_id, phone, money, type, status, today, url, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     await connection.execute(sql_recharge, [client_transaction_id, 0, receiver_phone, amount, 'wallet', 0, checkTime, 0, time]);
-                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-                    await connection.query(sql_noti, [userInfo.id, "Balance Transfer of Amount "+amount+" Initiated Successfully.", '0']);
+                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+                    await connection.query(sql_noti, [userInfo.id, "Balance Transfer of Amount "+amount+" Initiated Successfully.", '0', "Transfer"]);
                     return res.status(200).json({
                         message: `Waiting for admin approval`,
                         curr_user_m:money,
@@ -1515,6 +1600,29 @@ const listWithdraw = async (req, res) => {
         timeStamp: timeNow,
     });
 }
+
+const getnotificationCount = async (req, res) => {
+    let auth = req.cookies.auth;
+    if (!auth) {
+        return res.status(200).json({
+            message: 'Failed',
+            status: false,
+            timeStamp: timeNow,
+            N_Count: 0,
+        });
+    }
+    let [user] = await connection.query('SELECT * FROM users WHERE `token` = ?', [auth]);
+    const [notifications] = await connection.query(`SELECT COUNT(id) as total FROM notification WHERE recipient  = ? AND isread = ? `,[user[0]?.id, '0']);
+
+    let countNot = notifications[0].total;
+    
+    return res.status(200).json({
+            message: 'Success',
+            status: true,
+            N_Count: countNot,
+        });
+}
+
 
 const useRedenvelope = async (req, res) => {
     let auth = req.cookies.auth;
@@ -1869,10 +1977,70 @@ const updateRecharge = async (req, res) => {
             timeStamp: timeNow,
         });
     }
-
-
 }
 
+const getnotifications = async (req, res) => {
+    let auth = req.cookies.auth;
+    let [user] = await connection.query('SELECT * FROM users WHERE `token` = ?', [auth]);
+    const [rows] = await connection.query('SELECT * FROM notification WHERE `recipient` = ? ORDER BY id DESC',[user[0]?.id]);
+
+    if (!rows) {
+        return res.status(200).json({
+            message: 'Failed',
+            status: false,
+
+        });
+    }
+    return res.status(200).json({
+        message: 'Success',
+        status: true,
+        data: {
+        },
+        rows: rows
+    })
+};
+
+
+const updatenotifications = async (req, res) => {
+    let auth = req.cookies.auth;
+    let [user] = await connection.query('SELECT * FROM users WHERE `token` = ?', [auth]);
+    await connection.execute("UPDATE notification SET isread = ?  WHERE `recipient` = ? AND  isread = ? ", [1,user[0]?.id,'0'] );
+    return res.status(200).json({
+        message: 'Updated',
+        status: true,
+        });
+};
+
+
+const xpgain_value = async (req, res) => {
+    let auth = req.cookies.auth;
+    let xp_gain_val = 0;
+    let [user] = await connection.query('SELECT * FROM users WHERE `token` = ?', [auth]);
+    const [wingo_xp] = await connection.query(`SELECT SUM(money) as total FROM minutes_1 WHERE phone = ? `, user[0].phone);
+    const [k3_xp] = await connection.query(`SELECT SUM(money) as total FROM result_k3 WHERE phone = ? `, user[0].phone);
+    const [d5_xp] = await connection.query(`SELECT SUM(money) as total FROM result_5d WHERE phone = ? `, user[0].phone);
+    if(wingo_xp[0].total == null)
+    {
+        wingo_xp[0].total = 0;
+    }
+    if(k3_xp[0].total == null)
+    {
+        k3_xp[0].total = 0;
+    }
+    if(d5_xp[0].total == null)
+    {
+        d5_xp[0].total = 0;
+    }
+
+    xp_gain_val = parseInt(wingo_xp[0].total) + parseInt(k3_xp[0].total) + parseInt(d5_xp[0].total);
+
+    return res.status(200).json({
+        message: 'Successful',//Register Sucess
+        xp_value: xp_gain_val,
+        status: true
+    });
+
+};
 
 module.exports = {
     userInfo,
@@ -1900,5 +2068,9 @@ module.exports = {
     updateRecharge,
     confirmRecharge,
     cancelRecharge,
-    confirmUSDTRecharge
+    confirmUSDTRecharge,
+    getnotificationCount,
+    getnotifications,
+    updatenotifications,
+    xpgain_value    
 }

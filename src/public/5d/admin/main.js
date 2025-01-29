@@ -98,9 +98,9 @@ function messNewJoin2(datas) {
         let list_join2 = data.bet; // là người dùng Join đặt cược
         let x = data.amount; // là người dùng Join đặt cược
     
-        let total_money = (Number(data.money) * Number(x)) * list_join.length;
+        //let total_money = (Number(data.money) * Number(x)) * list_join.length;
+        let total_money = (Number(data.money)) * list_join.length;
         let money = formatMoney(total_money, ',');
-        
         result += `
         <div class="direct-chat-infos clearfix mt-2">
             <span class="direct-chat-name float-left"></span>
@@ -116,8 +116,9 @@ function messNewJoin2(datas) {
 }
 
 function messNewJoin3(datas) {
+    //var prev_total = parseInt($("#total_bet").text().trim());
     let arr = ['b', 's', 'c', 'l', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    var overall_bet = 0;
+    var overall_bet = 0 ;
     for (let i = 0; i < arr.length; i++) {
         $(`#${arr[i]}`).attr('totalMoney', 0);
         $(`#${arr[i]}`).text(0);
@@ -125,17 +126,25 @@ function messNewJoin3(datas) {
     
     datas.map((data) => {
         let bet = data.bet.split(''); // là người dùng Join đặt cược
-
+        let x = data.x;
+        if(x == null)
+        {
+            x = 1;
+        }
         for (let i = 0; i < bet.length; i++) {
-            let total_money = Number(data.money) / Number(bet.length);
+            
+            let money =  (Number(data.money) * Number(x));
             let totalM = Number($(`#${bet[i]}`).attr('totalMoney'));
-            $(`#${bet[i]}`).attr('totalMoney', totalM + Number(total_money));
-            $(`#${bet[i]}`).text(totalM + Number(total_money));
-            overall_bet = parseInt(parseInt(overall_bet) + Number(data.money));
+            $(`#${bet[i]}`).attr('totalMoney', totalM + money);
+            $(`#${bet[i]}`).text(totalM + money);
+            overall_bet = parseInt(parseInt(overall_bet) + (Number(data.money) * Number(x)));
+            $("#total_bet").text(parseInt(overall_bet).toString());
         }
     });
-
-    $("#total_bet").text(parseInt(overall_bet).toString());
+    if(datas.length == 0)
+    {
+        $("#total_bet").text('0');
+    }
 }
 
 function callListOrder(e) {
@@ -166,12 +175,16 @@ function callListOrder(e) {
 //callListOrder();
 socket.on("data-server-5d", function (msg) {
     if (msg) {
+
         callListOrder();
         $('.direct-chat-msg').html('');
     }
 });
 
 function messNewJoin(data) {
+    var internalb= $("#manage_2").find('.sub-menu-color').attr('data').trim();
+    if(internalb == data.join.trim())
+    {
     let game = $('html').attr('data-change');
     if (data.change == 1) return;
     if (data.game != game) return;
@@ -198,29 +211,32 @@ function messNewJoin(data) {
         scrollTop: $(".direct-chat-msg").prop("scrollHeight")
     }, 750);
 }
+}
 
 function messNewJoin5(data) {
+    var internalb= $("#manage_2").find('.sub-menu-color').attr('data').trim();
+    if(internalb == data.join.trim())
+    {
     let game = $('html').attr('data-change');
     if (data.chane == 1) return;
     if (data.game != game) return;
-
-    var overall_bet = 0;
+    var prev_total = parseInt($("#total_bet").text().trim());
+    var overall_bet = 0 + prev_total;
     let bet = data.list_join.split(''); // là người dùng Join đặt cược
-
+    let x = data.x;
     for (let i = 0; i < bet.length; i++) {
-        let money = Number(data.money);
+        let money =  (Number(data.money) * Number(x));
         let totalM = Number($(`#${bet[i]}`).attr('totalMoney'));
         $(`#${bet[i]}`).attr('totalMoney', totalM + money);
         $(`#${bet[i]}`).text(totalM + money);
-        overall_bet = parseInt(parseInt(overall_bet) + Number(data.money));
+        overall_bet = parseInt(parseInt(overall_bet) + (Number(data.money) * Number(x)));
+        $("#total_bet").text(parseInt(overall_bet).toString());
     }
-
-    $("#total_bet").text(parseInt(overall_bet).toString());
+}
 }
 
 socket.on("data-server-5", function (msg) {
     messNewJoin(msg);
-    console.log(msg);
     messNewJoin5(msg);
 });
 

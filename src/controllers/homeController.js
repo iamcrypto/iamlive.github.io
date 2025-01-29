@@ -18,7 +18,10 @@ const rebatePage = async (req, res) => {
 }
 
 const vipPage = async (req, res) => {
-    return res.render("checkIn/vip.ejs");
+    let auth = req.cookies.auth;
+    const [userinfo] = await connection.query('SELECT `name_user` FROM users WHERE `token` = ? ', [auth]);
+    let userid = userinfo[0].name_user;
+    return res.render("checkIn/vip.ejs", {  UserName : userid });
 }
 
 const jackpotPage = async (req, res) => {
@@ -166,6 +169,7 @@ const riskAgreement = async (req, res) => {
 const myProfilePage = async (req, res) => {
     return res.render("member/myProfile.ejs");
 }
+
 
 const getSalaryRecord = async (req, res) => {
     const auth = req.cookies.auth;

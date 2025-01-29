@@ -108,6 +108,9 @@ const initWebRouter = (app) => {
     router.post('/api/webapi/login', accountController.login); // login
     router.post('/api/webapi/register', accountController.register); // register
     router.get('/aviator', middlewareController, userController.aviator);
+    router.get('/api/webapi/getnotificationCount', middlewareController, userController.getnotificationCount);
+    router.get('/api/webapi/updatenotifications', middlewareController, userController.updatenotifications);
+    router.get('/api/webapi/getnotifications', middlewareController, userController.getnotifications);
     router.get('/api/webapi/GetUserInfo', middlewareController, userController.userInfo); // get info account
     router.put('/api/webapi/change/userInfo', middlewareController, userController.changeUser); // get info account
     router.put('/api/webapi/change/pass', middlewareController, userController.changePassword); // get info account
@@ -190,6 +193,7 @@ const initWebRouter = (app) => {
 
 
     router.get('/admin/manager/members', adminController.middlewareAdminController, adminController.membersPage); // get info account
+    router.get('/admin/manager/adminChatPage', adminController.middlewareAdminController, adminController.adminChatPage); 
     router.get('/admin/manager/createBonus', adminController.middlewareAdminController, adminController.giftPage); // get info account
     router.get('/admin/manager/ctv', adminController.middlewareAdminController, adminController.ctvPage); // get info account
     router.get('/admin/manager/ctv/profile/:phone', adminController.middlewareAdminController, adminController.ctvProfilePage); // get info account
@@ -248,6 +252,9 @@ const initWebRouter = (app) => {
     router.post('/api/webapi/admin/k3/listOrders', adminController.middlewareAdminController, adminController.listOrderOldK3); // get info account
     router.post('/api/webapi/admin/5d/editResult', adminController.middlewareAdminController, adminController.editResult); // get info account
     router.post('/api/webapi/admin/k3/editResult', adminController.middlewareAdminController, adminController.editResult2); // get info account
+
+
+    router.get('/api/webapi/xpgain_value', middlewareController, userController.xpgain_value);
 
     return app.use('/', router);
 }

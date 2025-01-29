@@ -147,21 +147,25 @@ const register = async (req, res) => {
                     const sql = "INSERT INTO users SET id_user = ?,phone = ?,name_user = ?,password = ?, plain_password = ?, money = ?,code = ?,invite = ?,ctv = ?,veri = ?,otp = ?,ip_address = ?,status = ?,time = ?";
                     await connection.execute(sql, [id_user, username, name_user, md5(pwd), pwd, 0, code, invitecode, ctv, 1, otp2, ip, 1, time]);
                     await connection.execute('INSERT INTO point_list SET phone = ?', [username]);
-
                     let [check_code] = await connection.query('SELECT * FROM users WHERE invite = ? ', [invitecode]);
-
                     if(check_i.name_user !=='Admin'){
                         let levels = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44];
                         for (let i = 0; i < levels.length; i++) {
                             if (check_code.length >= levels[i]) {
-                                await connection.execute('UPDATE users SET user_level = ? WHERE code = ?', [i + 1, invitecode]);
+                                let [mainUser] = await connection.query('SELECT * FROM users WHERE code = ? ', [invitecode]);
+                                if(parseInt(mainUser[0].user_level) != parseInt(i + 1))
+                                {
+                                    await connection.execute('UPDATE users SET user_level = ? WHERE code = ?', [i + 1, invitecode]);
+                                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+                                    await connection.query(sql_noti, [mainUser[0].id, "Congartualtions..! Your level is updated to Level : " + parseInt(i +1), '0', "Level"]);
+                                }
                             } else {
                                 break;
                             }
                         }
                     }
-                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-                    await connection.query(sql_noti, [check_i.id, "Your invitee "+ username.replace(/[0-9]+5/g,i=>"*****".slice(0,i.length)) +" had joined our platform, referral code " + code +" Congartualtions...!", '0']);
+                    let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+                    await connection.query(sql_noti, [check_i[0].id, "Your invitee "+ username.replace(/[0-9]+5/g,i=>"*****".slice(0,i.length)) +" had joined our platform, referral code " + code +" Congartualtions...!", '0', "Referral"]);
                     let sql4 = 'INSERT INTO turn_over SET phone = ?, code = ?, invite = ?';
                     await connection.query(sql4, [username, code, invitecode]);
 
@@ -314,8 +318,8 @@ const forGotPassword = async (req, res) => {
         if (user.time_otp - now > 0) {
             if (user.otp == otp) {
                 await connection.execute("UPDATE users SET password = ?, otp = ?, time_otp = ? WHERE phone = ? ", [md5(pwd), otp2, timeEnd, username]);
-                let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?';
-                await connection.query(sql_noti, [user.id, "Password Changed Successfully", '0']);
+                let sql_noti = 'INSERT INTO notification SET recipient = ?, description = ?, isread = ?, noti_type = ?';
+                await connection.query(sql_noti, [user.id, "Password Changed Successfully", '0', "Password"]);
                 return res.status(200).json({
                     message: 'Change password successfully',
                     status: true,
