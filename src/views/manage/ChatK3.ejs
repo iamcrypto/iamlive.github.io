@@ -77,7 +77,7 @@
           </div>
         </section>
       </div>
-      <div id="messages"></div>
+      <div id="k3chat"></div>
   </div> 
   <!-- <script src="/plugins/jquery/jquery.min.js"></script> -->
   <link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
@@ -118,7 +118,7 @@ const firebaseConfig = {
       let count = 0;
       // TO RECEIVE MSG
       let dataSet = [];
-      onChildAdded(ref(db,"messages"), (data)=>{
+      onChildAdded(ref(db,"k3chat"), (data)=>{
         count += 1;
         let date1 = data.val().datetime;
         if(data.val().datetime == null)
@@ -150,7 +150,7 @@ const firebaseConfig = {
 
       // TO DELETE MSG
       module.dltMsg = function dltMsg(key){
-        remove(ref(db,"messages/"+key));
+        remove(ref(db,"k3chat/"+key));
         const dataset2 = dataSet.filter(v => v.Key.toString().trim() !== key.toString().trim());
         $(function () {
           $('#table1').DataTable({
@@ -175,7 +175,7 @@ const firebaseConfig = {
     }
 
       // WHEN MSG IS DELETED
-      onChildRemoved(ref(db,"messages"),(data)=>{
+      onChildRemoved(ref(db,"k3chat"),(data)=>{
           $('#'+data.key).remove();
       })
 

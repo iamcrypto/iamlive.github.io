@@ -206,7 +206,7 @@
         font-weight: 500;
         padding-left: 5px;
     }
-    #messages{
+    #d5chat{
         position: absolute;
         left:0;
         top:16%;
@@ -324,6 +324,27 @@
         margin-top: 0%;
     
     }
+
+  #result_div{
+      width: 225px;
+      position: relative;
+  }
+  #result_div .li{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 20px !important;
+    height: 20px;
+    border: 1px solid #bbb;
+    border-radius: 16px;
+    margin-right: 4px;
+    color: #bbb;
+}
+#result_div .li .span_num
+{
+  font-size: 15px;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
@@ -360,16 +381,14 @@
         <!---------->
 
 
-        <div id="messages"></div>
+        <div id="d5chat"></div>
                         <div data-v-106b99c8="" >
-                            <div class="bet_details">
-                                <span class="b_number">
-                                    
-                                </span>
-                                <span class="num_color">
-                                    
-                                </span>
-                            </div> 
+                          <div class="bet_details">
+                            <div class="c-row qiu c-row-middle-center" id="result_div">
+                            </div>
+                          <span class="sum_value">                                    
+                          </span>
+                      </div> 
                             
                             <div id="timer"></div>
                         </div>
@@ -415,7 +434,12 @@
         }, 1000);
         
         }
-
+        function split(n) {
+          if(n != null)
+          {
+            return n.toString().match(/.{1}(?=.)|.+/g);
+          }
+        }
         var interval_in;
         function cownDownTimer() {
           var countDownDate = new Date("2030-07-16T23:59:59.9999999+01:00").getTime();
@@ -426,41 +450,34 @@
               var minute = Math.ceil(minutes % Number(1));
               var seconds1 = Math.floor((distance % (1000 * 60)) / 10000);
               var seconds2 = Math.floor(((distance % (1000 * 60)) / 1000) % 10);
-              const p_details = `<%=d_period%>`;
-              const a_details = `<%=d_amount%>`;
+              const p_details = `<%=d5_period%>`;
+              const a_details = `<%=d5_amount%>`;
               $('#timer').html('0' + ':' + seconds1 + seconds2);
               $("#period_id").text(p_details);
-              $(".b_number").text(a_details);
-              if( parseInt(a_details) == 5 || parseInt(a_details)== 0)
-              {
-                  $(".num_color").css('background-color', '#eb43dd');
+              var a_result = split(a_details).toString().split(",");
+              var count=0;
+              for (var i=a_result.length; i--;) {
+                count+= parseInt(a_result[i]);
               }
-              else if (parseInt(a_details) % 2 == 0) {
-                  $(".num_color").css('background-color', '#fb4e4e');
-              }
-              else{
-                  $(".num_color").css('background-color', '#5cba47');
-              }
+              $("#result_div").html(`<div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[0]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[1]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[2]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[3]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[4]+`</div></div>`);
+              $(".sum_value").text(count);
           }, 1000);
       }
       cownDownTimer();
         const socket = io();
-        socket.on("data-server-chat", function (msg) {
+        socket.on("data-server-chat5d", function (msg) {
             if (msg) {
               clearInterval(interval_in);
               calltimer();
                 $("#period_id").text(msg.data[1].period);
-                $(".b_number").text(msg.data[1].amount);
-                if(parseInt(msg.data[1].amount) == 5 || parseInt(msg.data[1].amount) == 0)
-                {
-                    $(".num_color").css('background-color', '#eb43dd');
+                var a_result1 = split(msg.data[1].result).toString().split(",");
+                var count1=0;
+                for (var i=a_result1.length; i--;) {
+                  count1+= parseInt(a_result1[i]);
                 }
-                else if (parseInt(msg.data[1].amount) % 2 == 0) {
-                    $(".num_color").css('background-color', '#fb4e4e');
-                }
-                else{
-                    $(".num_color").css('background-color', '#5cba47');
-                }
+                $("#dice_div").empty();
+                $("#result_div").html(`<div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[0]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[1]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[2]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[3]+`</div></div><div class="li circle-black c-row c-row-middle-center c-tc"><div class="span_num">`+a_result[4]+`</div></div>`);
+                $(".sum_value").text(count);
             }
         });
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
@@ -535,7 +552,7 @@ const firebaseConfig = {
             var msg = msgTxt.value;
             var date = new Date();
             var timestamp = new Date().getTime();
-            set(ref(db,"messages/"+timestamp),{
+            set(ref(db,"d5chat/"+timestamp),{
                 msg : msg,
                 sender : sender,
                 status:"active",
@@ -547,24 +564,24 @@ const firebaseConfig = {
         }
 
         // TO RECEIVE MSG
-        onChildAdded(ref(db,"messages"), (data)=>{
+        onChildAdded(ref(db,"d5chat"), (data)=>{
             if(data.val().sender == sender){
-                messages.innerHTML += "<div style=justify-content:end class=outer id="+data.key+"><div id=inner class=me>you : "+data.val().msg+ " "+data.val().time+ "<button id=dltMsg onclick=module.dltMsg("+data.key+")><i class='fa fa-trash-o'></i></button></div></div>";
+                d5chat.innerHTML += "<div style=justify-content:end class=outer id="+data.key+"><div id=inner class=me>you : "+data.val().msg+ " "+data.val().time+ "<button id=dltMsg onclick=module.dltMsg("+data.key+")><i class='fa fa-trash-o'></i></button></div></div>";
             } else {
-                messages.innerHTML += "<div class=outer id="+data.key+"><div id=inner class=notMe>"+data.val().sender+" : "+data.val().msg+ " "+data.val().time+ "</div></div>";
+                d5chat.innerHTML += "<div class=outer id="+data.key+"><div id=inner class=notMe>"+data.val().sender+" : "+data.val().msg+ " "+data.val().time+ "</div></div>";
             }
-          $('#messages').scrollTop($('#messages')[0].scrollHeight);
+          $('#d5chat').scrollTop($('#d5chat')[0].scrollHeight);
         })
 
         // TO DELETE MSG
         module.dltMsg = function dltMsg(key){
-            remove(ref(db,"messages/"+key));
+            remove(ref(db,"d5chat/"+key));
         }
 
         // WHEN MSG IS DELETED
-        onChildRemoved(ref(db,"messages"),(data)=>{
+        onChildRemoved(ref(db,"d5chat"),(data)=>{
             var msgBox = document.getElementById(data.key);
-            messages.removeChild(msgBox);
+            d5chat.removeChild(msgBox);
         })
      });
     </script>
